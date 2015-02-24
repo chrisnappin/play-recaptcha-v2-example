@@ -1,0 +1,17 @@
+@(userForm: Form[UserRegistration])(implicit request: Request[AnyContent], lang: Lang)
+
+@main(Messages("exampleForm.title")) {
+
+    <h1>@Messages("exampleForm.title")</h1>
+    <p>@Messages("exampleForm.description")</p>
+    
+    @helper.form(action = routes.ExampleForm.submitForm()) {
+        
+        @helper.inputText(userForm("username"), 'tabindex -> 1)
+        @helper.inputText(userForm("email"), 'tabindex -> 2)
+        @helper.checkbox(userForm("agree"), 'tabindex -> 3)
+        @recaptcha.recaptchaField(form = userForm, fieldName = "captcha", tabindex = Some(4))
+        
+        <button type="submit" tabindex="5">@Messages("exampleForm.submit")</button>
+    }
+}

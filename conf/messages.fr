@@ -1,0 +1,49 @@
+# French Messages, for illustrative purposes
+# Translated using babelfish, please excuse any mistakes!
+website.header=Mon Site Web
+website.footer=Exemple de Recaptcha Google
+
+index.title=Intégration de Google Recaptcha
+index.link=Exemple de formulaire
+index.suffix=à l'aide de recaptcha.
+
+exampleForm.title=Exemple de formulaire
+exampleForm.description=Voici un formulaire contenant des champs de données d'exemple, ainsi qu'un test de recaptcha.  
+exampleForm.submit=S'inscrire
+
+# form labels
+username=Nom d'utilisateur:
+email=Adresse de courriel:
+agree=J'accepte les termes et Conditions:
+captcha=Veuillez remplir le captcha suivant:
+
+# standard error messages
+error.required=Veuillez remplir ce champ
+error.email=Veuillez entrer une adresse email valide
+
+# customised info texts for play form helpers
+constraint.required=* Obligatoire
+constraint.email=
+format.boolean=
+
+result.title=Utilisateur enregistré
+result.feedback=Si nous avions une base de données, enregistrement de l'utilisateur aurait probablement été épargné à ce stade.
+result.home=Accueil
+
+# uncomment these to customise the reCAPTCHA widget text
+recaptcha.visualChallenge=Obtenir un défi visuel
+recaptcha.audioChallenge=Obtenir un défi audio
+recaptcha.refreshButton=Obtenir un nouveau défi
+recaptcha.instructionsVisual=Tapez le texte
+recaptcha.instructionsAudio=Tapez ce que vous entendez
+recaptcha.helpButton=Aide
+recaptcha.playAgain=Jouer un son nouveau
+recaptcha.cantHearThis=Téléchargez le son en MP3
+recaptcha.incorrectTryAgain=Incorrect. Réessayez.
+recaptcha.imageAltText=image de défi de reCAPTCHA
+recaptcha.privacyAndTerms=Termes & de la vie privée
+
+# uncomment these to customise the error messages
+error.captchaIncorrect=Incorrect, veuillez réessayer
+error.recaptchaNotReachable=Impossible de contacter Recaptcha
+error.apiError=Réponse non valide du Recaptcha

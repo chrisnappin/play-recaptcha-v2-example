@@ -1,0 +1,26 @@
+@(title: String)(content: Html)(implicit lang: Lang)
+
+<!DOCTYPE html>
+
+<html>
+    <head>
+        <title>@title</title>
+        <link rel="stylesheet" media="screen" type="text/css" href="@routes.Assets.at("stylesheets/main.css")">
+        
+<!--[if lt IE 9]>
+<script src="@routes.Assets.at("javascripts/html5shiv.js")"></script>
+<![endif]-->
+
+    </head>
+    <body>
+<header>
+    <p>@Messages("website.header")</p>
+</header>        
+<section>    
+    @content
+</section>
+<footer>
+    <p>@Messages("website.footer")</p> 
+</footer>                
+    </body>
+</html>

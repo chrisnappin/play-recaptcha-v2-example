@@ -1,0 +1,121 @@
+/* gets rid of default styling */
+@import url("reset.css");
+
+body {
+	color: #000;
+	font-family: verdana,sans-serif;
+}
+
+header p {
+    color: #fff;
+    background: #77f;
+    font-style: italic;
+    font-size: 600%;
+    padding: 20px;
+}
+
+footer p {
+    color: #999;
+    font-style: italic;
+    font-size: 80%;
+    text-align: center;
+    padding: 40px;
+    clear: both;
+}
+
+h1 {
+    font-size: 200%;
+    letter-spacing: -2px;
+    padding-top: 20px;
+    padding-bottom: 20px;
+    padding-left: 10px;
+    padding-right: 10px;
+}
+
+section p {
+    font-size: 100%;
+    padding: 10px;
+}
+
+a {
+	color: #22c;
+}
+
+a:link, a:visited  {
+	text-decoration: none;
+}
+
+a:hover, a:active {
+    text-decoration: underline;
+}
+
+dl {
+    position: relative;
+    height: 20px;
+    padding-top: 10px;
+}
+
+dl#captcha_field {
+	height: 140px;
+}
+
+dt label {
+    position: absolute;
+    top: 15px;
+    width: 300px;
+    font-size: 90%;
+    text-align: right;
+}
+
+dd input {
+    position: absolute;
+    left: 315px;
+    width: 300px;
+    border: 1px solid #000;
+    background: #ffc;
+}
+
+dd input:hover {
+    border: 1px solid #000;
+    background: #eeb;
+}
+
+dl#captcha_field dd {
+    position: absolute;
+    left: 310px;
+    width: 300px;
+}
+
+dd input#agree {
+    position: absolute;
+    top: 15px;
+    left: 310px;
+    width: 20px;
+}
+
+dl#captcha_field dd.info, dd.info {
+    position: absolute;
+    top: 15px;
+    left: 640px;
+    font-size: 90%;
+    font-style: italic;
+}
+
+dl#captcha_field dd.error, dd.error {
+    color: #d00;
+    font-size: 90%;
+    font-style: italic;
+    position: absolute;
+    top: 15px;
+    left: 740px;
+}
+
+button {
+    font-family: verdana,sans-serif;
+    font-size: 100%;
+    position: relative;
+    left: 310px;
+    background: #4b4;
+    border: 2px solid #000;
+    padding: 8px;
+}

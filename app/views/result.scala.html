@@ -1,0 +1,14 @@
+@()(implicit flash: Flash, lang: Lang)
+
+@main(Messages("result.title")) {
+
+    <h1>@Messages("result.title")</h1>
+
+    <p>@Messages("result.feedback")</p>
+    
+    @if(flash.get("save.message").isDefined) {
+        <p>@flash.get("save.message")</p>   
+    }
+    
+    <a href="@routes.Index.index()">@Messages("result.home")</a>
+}
