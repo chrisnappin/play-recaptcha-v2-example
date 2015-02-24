@@ -1,8 +1,8 @@
 # Messages for the default language
 website.header=My Web Site
-website.footer=Google Recaptcha Example
+website.footer=Google Recaptcha v2 Example
 
-index.title=Google Recaptcha Integration
+index.title=Google Recaptcha v2 Integration
 index.link=Example form
 index.suffix=using recaptcha.
 

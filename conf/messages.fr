@@ -1,9 +1,9 @@
 # French Messages, for illustrative purposes
 # Translated using babelfish, please excuse any mistakes!
 website.header=Mon Site Web
-website.footer=Exemple de Recaptcha Google
+website.footer=Exemple de Recaptcha v2 Google
 
-index.title=Intégration de Google Recaptcha
+index.title=Intégration de Google v2 Recaptcha
 index.link=Exemple de formulaire
 index.suffix=à l'aide de recaptcha.
 
