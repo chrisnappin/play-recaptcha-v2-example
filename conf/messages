@@ -29,20 +29,6 @@ result.title=User Registered
 result.feedback=If we had a database, the user's registration would have probably been saved at this point.
 result.home=Home
 
-# uncomment these to customise the reCAPTCHA widget text (defaults are shown below)
-#recaptcha.visualChallenge=Get a visual challenge
-#recaptcha.audioChallenge=Get an audio challenge
-#recaptcha.refreshButton=Get a new challenge
-#recaptcha.instructionsVisual=Type the text
-#recaptcha.instructionsAudio=Type what you hear
-#recaptcha.helpButton=Help
-#recaptcha.playAgain=Play sound again
-#recaptcha.cantHearThis=Download sound as MP3
-#recaptcha.incorrectTryAgain=Incorrect. Try again.
-#recaptcha.imageAltText=reCAPTCHA challenge image
-#recaptcha.privacyAndTerms=Privacy & Terms
-
 # uncomment these to customise the error messages (defaults are shown below)
-#error.captchaIncorrect=Incorrect, please try again
 #error.recaptchaNotReachable=Unable to contact Recaptcha
 #error.apiError=Invalid response from Recaptcha
