@@ -6,7 +6,7 @@ libraryDependencies ++= Seq(
   "com.nappin" %% "play-recaptcha" % "1.0" 
 )
 
-scalaVersion := "2.10.4"
+scalaVersion := "2.11.6"
 
 lazy val root = (project in file(".")).enablePlugins(PlayScala)
 
