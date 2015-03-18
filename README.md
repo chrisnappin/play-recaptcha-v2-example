@@ -5,6 +5,8 @@ This is an example web application showing how to use the
 [play-recaptcha](https://github.com/chrisnappin/play-recaptcha) module
 with reCAPTCHA version 2 (no-captcha recaptcha). 
 
+![reCAPTCHA version 2](recaptcha-example-v2.png "reCAPTCHA version 2")
+
 License
 -------
 
