@@ -19,6 +19,7 @@
 	<logger name="play" level="info"/>
 	<logger name="net.sf.ehcache" level="warn"/>
 	<logger name="org.jboss.netty" level="warn"/>
+	<logger name="com.google.inject" level="warn"/>
 	
 	<!-- set to debug to see WS http requests and responses -->
 	<logger name="com.ning" level="debug"/>

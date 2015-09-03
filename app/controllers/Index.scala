@@ -15,16 +15,19 @@
  */
 package controllers
 
+import javax.inject.Inject
+
 import play.api._
 import play.api.mvc._
+import play.api.i18n._
 
-object Index extends Controller {
+class Index @Inject() (val messagesApi: MessagesApi) extends Controller with I18nSupport {
 
     val logger: Logger = Logger(this.getClass())
-    
+
     def index = Action { implicit request => {
             logger.debug("accept languages are: " + request.acceptLanguages)
-            
+
             Ok(views.html.index())
         }
     }
