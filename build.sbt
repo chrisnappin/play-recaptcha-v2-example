@@ -3,7 +3,9 @@ name := "recaptcha-v2-example"
 version := "1.5"    
 
 libraryDependencies ++= Seq(
-  "com.nappin" %% "play-recaptcha" % "1.5" 
+  "com.nappin" %% "play-recaptcha" % "1.5",
+  specs2 % Test,
+  "org.mockito" % "mockito-core" % "1.+" % Test 
 )
 
 scalaVersion := "2.11.6"
