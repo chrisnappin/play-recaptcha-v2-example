@@ -1,4 +1,6 @@
-@(userForm: Form[UserRegistration])(implicit request: Request[AnyContent], messages: Messages)
+@import com.nappin.play.recaptcha.WidgetHelper
+
+@(userForm: Form[UserRegistration])(implicit request: Request[AnyContent], messages: Messages, widgetHelper: WidgetHelper)
 
 @main(Messages("exampleForm.title")) {
 

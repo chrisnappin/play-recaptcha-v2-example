@@ -15,7 +15,7 @@
  */
 package controllers
 
-import com.nappin.play.recaptcha.RecaptchaVerifier
+import com.nappin.play.recaptcha.{RecaptchaVerifier, WidgetHelper}
 
 import javax.inject.Inject
 
@@ -28,8 +28,8 @@ import play.api.mvc._
 // case class used to bind data from the form
 case class UserRegistration(username: String, email: Option[String], agree: Boolean)
 
-class ExampleForm @Inject() (val messagesApi: MessagesApi, val verifier: RecaptchaVerifier)
-        extends Controller with I18nSupport {
+class ExampleForm @Inject() (val messagesApi: MessagesApi, val verifier: RecaptchaVerifier)(
+        implicit widgetHelper: WidgetHelper) extends Controller with I18nSupport {
 
     val logger = Logger(this.getClass())
 
