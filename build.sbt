@@ -8,11 +8,9 @@ libraryDependencies ++= Seq(
   "org.mockito" % "mockito-core" % "1.+" % Test 
 )
 
-scalaVersion := "2.11.6"
+scalaVersion := "2.11.7"
 
 lazy val root = (project in file(".")).enablePlugins(PlayScala)
-
-routesGenerator := InjectedRoutesGenerator
 
 // Enable this if using a snapshot release of play-recaptcha
 //resolvers += "Sonatype OSS Snapshots" at "https://oss.sonatype.org/content/repositories/snapshots/"

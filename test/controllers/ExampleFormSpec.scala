@@ -19,8 +19,9 @@ import com.nappin.play.recaptcha.{RecaptchaVerifier, WidgetHelper}
 
 import org.specs2.mock.Mockito
 import org.specs2.runner.JUnitRunner
+import org.specs2.specification.Scope
 import org.junit.runner.RunWith
-import play.api.Play
+
 import play.api.data.Form
 import play.api.i18n.MessagesApi
 import play.api.mvc.{AnyContent, Request, Result}
@@ -28,6 +29,8 @@ import play.api.test.{FakeRequest, PlaySpecification, WithApplication}
 import play.api.test.Helpers._
 
 import scala.concurrent.{ExecutionContext, Future}
+import com.nappin.play.recaptcha.RecaptchaSettings
+import play.api.Application
 
 /**
  * Unit test for the <code>ExampleForm</code> controller, using a mocked out Verifier.
@@ -39,8 +42,8 @@ class ExampleFormSpec extends PlaySpecification with Mockito {
 
     "The example form controller" should {
 
-        "return the example form" in new WithApplication {
-            val controller = getMockController(VERIFIER_ACTION_NONE)
+        "return the example form" in new WithApplication with WithWidgetHelper {
+            val controller = getMockController(app, VERIFIER_ACTION_NONE)
             val request = FakeRequest(GET, "/form")
             val page = controller.show().apply(request)
 
@@ -50,14 +53,14 @@ class ExampleFormSpec extends PlaySpecification with Mockito {
         }
 
         "reject an empty form submission" in new WithApplication {
-            val controller = getMockController(VERIFIER_ACTION_EMPTY_FORM)
+            val controller = getMockController(app, VERIFIER_ACTION_EMPTY_FORM)
             val request = FakeRequest(POST, "/form").withFormUrlEncodedBody()
 
             await(controller.submitForm().apply(request)) must throwAn[IllegalStateException]
         }
 
-        "reject missing mandatory fields" in new WithApplication {
-            val controller = getMockController(VERIFIER_ACTION_USERNAME_MISSING)
+        "reject missing mandatory fields" in new WithApplication with WithWidgetHelper {
+            val controller = getMockController(app, VERIFIER_ACTION_USERNAME_MISSING)
             val request = FakeRequest(POST, "/form").withFormUrlEncodedBody(
                     "recaptcha_response_field" -> "r")
             val page = controller.submitForm().apply(request)
@@ -67,8 +70,8 @@ class ExampleFormSpec extends PlaySpecification with Mockito {
             contentAsString(page) must contain ("Username is required")
         }
 
-        "reject recaptcha failure" in new WithApplication {
-            val controller = getMockController(VERIFIER_ACTION_RECAPTCHA_FAILURE)
+        "reject recaptcha failure" in new WithApplication with WithWidgetHelper {
+            val controller = getMockController(app, VERIFIER_ACTION_RECAPTCHA_FAILURE)
             val request = FakeRequest(POST, "/form").withFormUrlEncodedBody(
                     "recaptcha_response_field" -> "r")
             val page = controller.submitForm().apply(request)
@@ -78,8 +81,8 @@ class ExampleFormSpec extends PlaySpecification with Mockito {
             contentAsString(page) must contain ("Incorrect, please try again")
         }
 
-        "handle recaptcha success" in new WithApplication {
-            val controller = getMockController(VERIFIER_ACTION_RECAPTCHA_SUCCESS)
+        "handle recaptcha success" in new WithApplication with WithWidgetHelper {
+            val controller = getMockController(app, VERIFIER_ACTION_RECAPTCHA_SUCCESS)
             val request = FakeRequest(POST, "/form").withFormUrlEncodedBody(
                     "recaptcha_response_field" -> "r",
                     "username" -> "a")
@@ -88,8 +91,8 @@ class ExampleFormSpec extends PlaySpecification with Mockito {
             status(page) must equalTo(SEE_OTHER)
         }
 
-        "return the results page" in new WithApplication {
-            val controller = getMockController(VERIFIER_ACTION_NONE)
+        "return the results page" in new WithApplication with WithWidgetHelper {
+            val controller = getMockController(app, VERIFIER_ACTION_NONE)
             val request = FakeRequest(GET, "/result")
             val page = controller.result().apply(request)
 
@@ -105,9 +108,9 @@ class ExampleFormSpec extends PlaySpecification with Mockito {
     val VERIFIER_ACTION_RECAPTCHA_FAILURE = 3
     val VERIFIER_ACTION_RECAPTCHA_SUCCESS = 4
 
-    def getMockController(verifierAction: Int): ExampleForm = {
+    def getMockController(app: Application, verifierAction: Int): ExampleForm = {
         implicit val widgetHelper = mock[WidgetHelper]
-        val messagesApi = Play.current.injector.instanceOf[MessagesApi]
+        val messagesApi = app.injector.instanceOf[MessagesApi]
         val verifier = mock[RecaptchaVerifier]
         val controller = new ExampleForm(messagesApi, verifier)
 
@@ -144,5 +147,11 @@ class ExampleFormSpec extends PlaySpecification with Mockito {
                         Future { controller.userForm.bindFromRequest()(request) }
         }
         controller
+    }
+
+    trait WithWidgetHelper extends Scope {
+        def app: play.api.Application
+        lazy val settings = new RecaptchaSettings(app.configuration)
+        lazy val widgetHelper = new WidgetHelper(settings)
     }
 }
