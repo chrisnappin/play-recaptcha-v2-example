@@ -4,26 +4,35 @@ website.footer=Google Recaptcha v2 Example
 
 index.title=Google Recaptcha v2 Integration
 index.link=Example form
-index.suffix=using recaptcha.
+index.suffix1=using recaptcha with Play Form APIs.
+index.suffix2=using recaptcha with Javascript.
+index.suffix3=using recaptcha with Bootstrap.
 
 exampleForm.title=Example Form
 exampleForm.description=Here is a form containing some example data fields, plus a recaptcha test.
 exampleForm.submit=Register
 
+javascriptForm.title=Example Javascript Form
+javascriptForm.description=Here is a form containing some example data fields, plus a recaptcha test.
+javascriptForm.submit=Register
+
 # form labels
 username=Username:
 email=Email Address:
+age=Age:
 agree=I agree to the Terms and Conditions:
 captcha=Please complete the following captcha:
 
 # standard error messages
 error.required=Please complete this field
 error.email=Please enter a valid email address
+error.number=Please enter a valid number
 
 # customised info texts for play form helpers
 constraint.required=* Required
 constraint.email=
 format.boolean=
+format.numeric=
 
 result.title=User Registered
 result.feedback=If we had a database, the user's registration would have probably been saved at this point.

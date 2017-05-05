@@ -3,6 +3,10 @@
 @main(Messages("index.title")) {
 
     <h1>@Messages("index.title")</h1>
-    <p><a href="@routes.ExampleForm.show()">@Messages("index.link")</a> @Messages("index.suffix")</p>
+    <ul>
+        <li><a href="@routes.ExampleForm.show()">@Messages("index.link")</a> @Messages("index.suffix1")</li>
+        <li><a href="@routes.JavascriptForm.show()">@Messages("index.link")</a> @Messages("index.suffix2")</li>
+        <li><a href="@routes.ExampleForm.show()">@Messages("index.link")</a> @Messages("index.suffix3") [TODO]</li>
+    </ul>
     <p>&nbsp;</p>
 }

@@ -1,0 +1,84 @@
+@import com.nappin.play.recaptcha.WidgetHelper
+
+@(jsForm: Form[JavascriptRegistration])(implicit request: Request[AnyContent], messages: Messages, widgetHelper: WidgetHelper)
+
+@main(Messages("javascriptForm.title")) {
+
+    <h1 id="title">@Messages("javascriptForm.title")</h1>
+    <p id="feedback">@Messages("exampleForm.description")</p>
+
+    @helper.form(action = routes.JavascriptForm.submitForm(), 'id -> "jsform") {
+        @helper.inputText(jsForm("username"), 'id -> "username", 'tabindex -> 1)
+        @helper.inputText(jsForm("email"), 'id -> "email", 'tabindex -> 2)
+        @helper.inputText(jsForm("age"), 'id -> "age", 'tabindex -> 3)
+        @helper.checkbox(jsForm("agree"), 'id -> "agree", 'tabindex -> 4)
+        <!-- TODO: recaptcha -->
+
+        <button id="jsformButton" type="submit" tabindex="6">@Messages("exampleForm.submit")</button>
+    }
+
+    <script>
+    $(document).ready(function() {
+      $("#jsform").submit(function(e){
+        e.preventDefault();
+      });
+
+      $.ajax({
+        type: 'GET',
+        url: '@routes.JavascriptForm.load()',
+        dataType: 'json',
+        timeout: 5000,
+        success: function(response, status, xhr) {
+          // populate the form
+          $("#username").val(response["username"]);
+          $("#email").val(response["email"]);
+          $("#age").val(response["age"]);
+          $("#agree").val([response["agree"]]); // array of matching checkbox values
+        },
+        error: function(xhr, status, response) {
+          alert("Error loading data to populate the form: " + response);
+        }
+      });
+
+      $("#jsformButton").click(function(e){
+        var formData = {
+          username: $("#username").val(),
+          email: $("#email").val(),
+          age: $("#age").val(),
+          agree: $("#agree").is(":checked")
+        }
+
+        $.ajax({
+          type: 'POST',
+          url: '@routes.JavascriptForm.submitForm()',
+          contentType: 'application/json',
+          data: JSON.stringify(formData),
+          dataType: 'json',
+          timeout: 5000,
+          success: function(response, status, xhr) {
+            // replace form with results message
+            $("h1#title").text(response["title"]);
+            $("p#feedback").text(response["feedback"]);
+            $("form#jsform").remove();
+          },
+          error: function(xhr, status, response) {
+            var errorMessages = $.parseJSON(xhr.responseText)
+
+            $("form#jsform > dl").each(function(n) {
+              // Play field name is the id but without the "_field" suffix
+              var fieldname = this.id.slice(0, this.id.length - 6);
+
+              if (errorMessages[fieldname]) {
+                // add error message for the field
+                $(this).append("<dd class='error'>" + errorMessages[fieldname][0] + "</dd>");
+              } else {
+                // no longer an error with this field
+                $("#" + this.id + " > dd.error").remove();
+              }
+            });
+          }
+        });
+      });
+    });
+    </script>
+}
