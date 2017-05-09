@@ -12,7 +12,7 @@
         @helper.inputText(jsForm("email"), 'id -> "email", 'tabindex -> 2)
         @helper.inputText(jsForm("age"), 'id -> "age", 'tabindex -> 3)
         @helper.checkbox(jsForm("agree"), 'id -> "agree", 'tabindex -> 4)
-        <!-- TODO: recaptcha -->
+        @recaptcha.recaptchaField(form = jsForm, fieldName = "captcha", tabindex = Some(5))
 
         <button id="jsformButton" type="submit" tabindex="6">@Messages("exampleForm.submit")</button>
     }
@@ -45,7 +45,8 @@
           username: $("#username").val(),
           email: $("#email").val(),
           age: $("#age").val(),
-          agree: $("#agree").is(":checked")
+          agree: $("#agree").is(":checked"),
+          "g-recaptcha-response": $("#g-recaptcha-response").val()
         }
 
         $.ajax({

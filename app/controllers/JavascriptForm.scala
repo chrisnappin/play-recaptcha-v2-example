@@ -18,12 +18,12 @@ package controllers
 import javax.inject.Inject
 
 import com.nappin.play.recaptcha.{RecaptchaVerifier, WidgetHelper}
-import play.api._
+import play.api.Logger
 import play.api.data.Forms._
-import play.api.data._
-import play.api.i18n._
+import play.api.data.Form
+import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.libs.json.Json
-import play.api.mvc._
+import play.api.mvc.{Action, Controller}
 
 import scala.concurrent.Future
 
@@ -63,57 +63,28 @@ class JavascriptForm @Inject()(val messagesApi: MessagesApi, val verifier: Recap
     }
 
     def submitForm = Action.async { implicit request =>
-
-        // TODO: add recaptcha and verify it
-
-        userForm.bindFromRequest.fold(
-          errors => Future {
-            // return the form validation errors
-            logger.debug("Binding had errors " + errors.errors)
-            UnprocessableEntity(errors.errorsAsJson)
-          },
-          success => Future {
-            // TODO: replace form with result
-            logger.debug("Binding successful " + success)
-
-            // TODO: process the validated form
-
-            // return the result messages
-            Ok(Json.obj("title" -> messagesApi("result.title"),
-                        "feedback" -> messagesApi("result.feedback")))
-          }
-        )
-
-      /*
         verifier.bindFromRequestAndVerify(userForm).map { form =>
             form.fold(
-                // validation or captcha test failed
+
+              // validation or captcha test failed
 	            errors => {
-	                // re-renders the form, with validation error messages etc
-	                logger.info("form validation or captcha test failed")
-	            	BadRequest(views.html.javascriptForm(errors))
+                logger.info("form validation or captcha test failed")
+
+                // return the form validation errors
+                UnprocessableEntity(widgetHelper.resolveRecaptchaErrors("captcha", errors).errorsAsJson)
 	            },
 
+              // all validation and captcha passed
 	            success => {
-	                logger.info("User is " + success)
+	                logger.info("Binding successful " + success)
 
-	                // only store simple message in flash
-	                val saveMessage = "User " + success.username + " has been registered"
-	                    //Messages("example.saveMessage", user)
+                // TODO: process the validated form
 
-	                // use POST-Redirect-GET to avoid repeated form submissions on browser refresh
-	                Redirect(routes.ExampleForm.result)
-	                	.flashing("save.message" -> saveMessage)
-
-	                /*
-	                 * This process uses GET redirect to a page with a message passed via flash scope.
-	                 * Alternatives could be passing an id as request parameter to a page that then loads the data
-	                 * again, or saving the model object in cache then reading from that...
-	                 */
+                // return the result messages
+                Ok(Json.obj("title" -> messagesApi("result.title"),
+                            "feedback" -> messagesApi("result.feedback")))
 	            }
             )
         }
-*/
     }
-
 }
