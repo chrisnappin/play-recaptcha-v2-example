@@ -35,7 +35,7 @@ format.boolean=
 format.numeric=
 
 result.title=User Registered
-result.feedback=If we had a database, the user's registration would have probably been saved at this point.
+result.feedback=If we had a database, the user''s registration would have probably been saved at this point.
 result.home=Home
 
 # uncomment these to customise the error messages (defaults are shown below)
