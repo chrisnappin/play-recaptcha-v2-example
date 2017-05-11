@@ -1,5 +1,5 @@
 /*
- * Copyright 2014 Chris Nappin
+ * Copyright 2017 Chris Nappin
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,19 +17,25 @@ package controllers
 
 import javax.inject.Inject
 
-import play.api._
-import play.api.mvc._
-import play.api.i18n._
+import play.api.Logger
+import play.api.mvc.{Action, Controller}
+import play.api.i18n.{I18nSupport, MessagesApi}
 
-class Index @Inject() (val messagesApi: MessagesApi) extends Controller with I18nSupport {
+/**
+  * Renders the index page.
+  * @param messagesApi    The Play messages
+  */
+class Index @Inject()(val messagesApi: MessagesApi) extends Controller with I18nSupport {
 
-    val logger: Logger = Logger(this.getClass())
+  /** The logger to use. */
+  private val logger: Logger = Logger(this.getClass)
 
-    def index = Action { implicit request => {
-            logger.debug("accept languages are: " + request.acceptLanguages)
-
-            Ok(views.html.index())
-        }
-    }
-
+  /**
+    * Show the index page.
+    * @return The index page
+    */
+  def index = Action { implicit request =>
+    logger.debug("accept languages are: " + request.acceptLanguages)
+    Ok(views.html.index())
+  }
 }
