@@ -3,6 +3,8 @@ This is an example web application showing how to use the [play-recaptcha](https
 
 ![reCAPTCHA version 2](recaptcha-example-v2.png "reCAPTCHA version 2")
 
+Please download the latest example code - [version 2.1](https://github.com/chrisnappin/play-recaptcha-v2-example/releases/tag/release-2.1) which works with [play-recaptcha v2.1](https://github.com/chrisnappin/play-recaptcha/releases/tag/release-2.1).
+
 ## License
 The Play reCAPTCHA Module, and this example app, are copyright Chris Nappin, and are released under the [Apache 2 License](http://www.apache.org/licenses/LICENSE-2.0).
 
