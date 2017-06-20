@@ -6,7 +6,7 @@ index.title=Google Recaptcha v2 Integration
 index.link=Example form
 index.suffix1=using recaptcha with Play Form APIs.
 index.suffix2=using recaptcha with Javascript.
-index.suffix3=using recaptcha with Bootstrap.
+index.suffix3=using invisible recaptcha with Play Form APIs.
 
 exampleForm.title=Example Form
 exampleForm.description=Here is a form containing some example data fields, plus a recaptcha test.
@@ -15,6 +15,10 @@ exampleForm.submit=Register
 javascriptForm.title=Example Javascript Form
 javascriptForm.description=Here is a form containing some example data fields, plus a recaptcha test.
 javascriptForm.submit=Register
+
+invisibleForm.title=Example Form
+invisibleForm.description=Here is a form containing some example data fields, plus an invisible recaptcha test.
+invisibleForm.submit=Register
 
 # form labels
 username=Username:

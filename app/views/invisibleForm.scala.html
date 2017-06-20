@@ -1,0 +1,20 @@
+@import com.nappin.play.recaptcha.WidgetHelper
+
+@(userForm: Form[InvisibleUserRegistration])(implicit request: Request[AnyContent], messages: Messages, widgetHelper: WidgetHelper)
+
+@main(Messages("invisibleForm.title")) {
+
+    <h1>@Messages("invisibleForm.title")</h1>
+    <p>@Messages("invisibleForm.description")</p>
+
+    @helper.form(action = routes.InvisibleForm.submitForm(), 'id -> "registration-form") {
+        
+        @helper.inputText(userForm("username"), 'tabindex -> 1)
+        @helper.inputText(userForm("email"), 'tabindex -> 2)
+        @helper.checkbox(userForm("agree"), 'tabindex -> 3)
+
+        <p>&nbsp;</p>
+
+        @recaptcha.invisibleButton(formId = "registration-form", text = Messages("invisibleForm.submit"), 'tabindex -> "4")
+    }
+}
