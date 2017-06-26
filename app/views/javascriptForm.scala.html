@@ -12,7 +12,8 @@
         @helper.inputText(jsForm("email"), 'id -> "email", 'tabindex -> 2)
         @helper.inputText(jsForm("age"), 'id -> "age", 'tabindex -> 3)
         @helper.checkbox(jsForm("agree"), 'id -> "agree", 'tabindex -> 4)
-        @recaptcha.recaptchaField(form = jsForm, fieldName = "captcha", tabindex = Some(5))
+        @recaptcha.recaptchaField(form = jsForm, fieldName = "captcha", tabindex = 5, includeNoScript = true,
+            isRequired = true, 'class -> "extraClass")
 
         <button id="jsformButton" type="submit" tabindex="6">@Messages("exampleForm.submit")</button>
     }
