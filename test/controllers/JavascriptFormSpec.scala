@@ -23,9 +23,10 @@ import org.specs2.runner.JUnitRunner
 import org.specs2.specification.Scope
 import play.api.Application
 import play.api.i18n.MessagesApi
+import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.libs.json.Json
 import play.api.mvc.{AnyContent, Request}
-import play.api.test.{FakeApplication, FakeRequest, PlaySpecification, WithApplication}
+import play.api.test.{FakeRequest, PlaySpecification, WithApplication}
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -43,7 +44,7 @@ class JavascriptFormSpec extends PlaySpecification with Mockito {
     RequestTimeoutConfigProp -> "5 seconds")
 
   abstract class WithWidgetHelper(configProps: Map[String, AnyRef]) extends WithApplication(
-    FakeApplication(additionalConfiguration = configProps)) with Scope
+    GuiceApplicationBuilder().configure(configProps).build()) with Scope
 
   "The Javascript form controller" should {
 

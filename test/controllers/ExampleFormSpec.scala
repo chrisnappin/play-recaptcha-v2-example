@@ -23,10 +23,11 @@ import org.specs2.specification.Scope
 import org.junit.runner.RunWith
 import play.api.i18n.MessagesApi
 import play.api.mvc.{AnyContent, Request}
-import play.api.test.{FakeApplication, FakeRequest, PlaySpecification, WithApplication}
+import play.api.test.{FakeRequest, PlaySpecification, WithApplication}
 
 import scala.concurrent.{ExecutionContext, Future}
 import play.api.Application
+import play.api.inject.guice.GuiceApplicationBuilder
 
 /**
   * Unit test for the <code>ExampleForm</code> controller, using a mocked out Verifier.
@@ -42,7 +43,7 @@ class ExampleFormSpec extends PlaySpecification with Mockito {
     RequestTimeoutConfigProp -> "5 seconds")
 
   abstract class WithWidgetHelper(configProps: Map[String, AnyRef]) extends WithApplication(
-      FakeApplication(additionalConfiguration = configProps)) with Scope
+      GuiceApplicationBuilder().configure(configProps).build()) with Scope
 
   "The example form controller" should {
 
