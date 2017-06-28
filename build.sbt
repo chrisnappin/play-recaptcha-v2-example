@@ -1,9 +1,9 @@
 name := "recaptcha-v2-example"
 
-version := "2.2-SNAPSHOT"
+version := "2.2"
 
 libraryDependencies ++= Seq(
-  "com.nappin" %% "play-recaptcha" % "2.2-SNAPSHOT" notTransitive(),
+  "com.nappin" %% "play-recaptcha" % "2.2" notTransitive(),
   ws,
   specs2 % Test,
   "org.mockito" % "mockito-core" % "1.+" % Test 
