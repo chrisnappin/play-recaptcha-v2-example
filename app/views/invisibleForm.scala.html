@@ -7,7 +7,7 @@
     <h1>@Messages("invisibleForm.title")</h1>
     <p>@Messages("invisibleForm.description")</p>
 
-    @helper.form(action = routes.InvisibleForm.submitForm(), 'id -> "registration-form") {
+    @helper.form(action = routes.InvisibleForm.submitForm(), 'id -> "my_form") {
         
         @helper.inputText(userForm("username"), 'tabindex -> 1)
         @helper.inputText(userForm("email"), 'tabindex -> 2)
@@ -15,6 +15,6 @@
 
         <p>&nbsp;</p>
 
-        @recaptcha.invisibleButton(formId = "registration-form", text = Messages("invisibleForm.submit"), 'tabindex -> "4")
+        @recaptcha.invisibleButton("my_form", Messages("invisibleForm.submit"), 'tabindex -> "4")
     }
 }
