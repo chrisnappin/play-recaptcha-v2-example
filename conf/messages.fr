@@ -7,7 +7,7 @@ index.title=Intégration de Google v2 Recaptcha
 index.link=Exemple de formulaire
 index.suffix1=à l'aide de recaptcha.
 index.suffix2=à l'aide de recaptcha avec Javascript.
-index.suffix3=à l'aide de recaptcha avec Bootstrap.
+index.suffix3=à l'aide de recaptcha invisible.
 
 exampleForm.title=Exemple de formulaire
 exampleForm.description=Voici un formulaire contenant des champs de données d'exemple, ainsi qu'un test de recaptcha.  

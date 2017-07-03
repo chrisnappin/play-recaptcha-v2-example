@@ -1,6 +1,6 @@
-@import com.nappin.play.recaptcha.WidgetHelper
+@this(invisibleButton: recaptcha.invisibleButton)
 
-@(userForm: Form[InvisibleUserRegistration])(implicit request: Request[AnyContent], messages: Messages, widgetHelper: WidgetHelper)
+@(userForm: Form[InvisibleUserRegistration])(implicit messagesProvider: MessagesProvider)
 
 @main(Messages("invisibleForm.title")) {
 
@@ -15,6 +15,6 @@
 
         <p>&nbsp;</p>
 
-        @recaptcha.invisibleButton("my_form", Messages("invisibleForm.submit"), 'tabindex -> "4")
+        @invisibleButton("my_form", Messages("invisibleForm.submit"), 'tabindex -> "4")
     }
 }

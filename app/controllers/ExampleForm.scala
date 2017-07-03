@@ -15,14 +15,14 @@
  */
 package controllers
 
-import com.nappin.play.recaptcha.{RecaptchaVerifier, WidgetHelper}
 import javax.inject.Inject
 
+import com.nappin.play.recaptcha.RecaptchaVerifier
 import play.api.Logger
 import play.api.data.Form
 import play.api.data.Forms._
-import play.api.i18n.{I18nSupport, MessagesApi}
-import play.api.mvc.{Action, Controller}
+import play.api.i18n.I18nSupport
+import play.api.mvc.{AbstractController, AnyContent, ControllerComponents, Request}
 
 // case class used to bind data from the form
 case class UserRegistration(username: String, email: Option[String], agree: Boolean)
@@ -30,12 +30,12 @@ case class UserRegistration(username: String, email: Option[String], agree: Bool
 /**
   * Example form with a recaptcha field.
   *
-  * @param messagesApi  The Play Messages
-  * @param verifier     The recaptcha verifier to use
-  * @param widgetHelper The widget helper to use
+  * @param formTemplate   The form template to use
+  * @param verifier       The recaptcha verifier to use
+  * @param cc             The controller components to use
   */
-class ExampleForm @Inject()(val messagesApi: MessagesApi, val verifier: RecaptchaVerifier)(
-  implicit widgetHelper: WidgetHelper) extends Controller with I18nSupport {
+class ExampleForm @Inject()(formTemplate: views.html.form, verifier: RecaptchaVerifier, cc: ControllerComponents)
+    extends AbstractController(cc) with I18nSupport {
 
   /** The logger to use. */
   private val logger = Logger(this.getClass)
@@ -52,15 +52,15 @@ class ExampleForm @Inject()(val messagesApi: MessagesApi, val verifier: Recaptch
     *
     * @return The form
     */
-  def show = Action { implicit request =>
-    Ok(views.html.form(userForm))
+  def show = Action { implicit request: Request[AnyContent] =>
+    Ok(formTemplate(userForm))
   }
 
   /**
     * Handles a form submission.
     * @return The success redirect, or the form with error messages
     */
-  def submitForm = Action.async { implicit request =>
+  def submitForm = Action.async { implicit request: Request[AnyContent] =>
     implicit val context = scala.concurrent.ExecutionContext.Implicits.global
 
     verifier.bindFromRequestAndVerify(userForm).map { form =>
@@ -69,7 +69,7 @@ class ExampleForm @Inject()(val messagesApi: MessagesApi, val verifier: Recaptch
         errors => {
           // re-renders the form, with validation error messages etc
           logger.info("form validation or captcha test failed")
-          BadRequest(views.html.form(errors))
+          BadRequest(formTemplate(errors))
         },
 
         // validation and captcha test succeeded
@@ -98,7 +98,7 @@ class ExampleForm @Inject()(val messagesApi: MessagesApi, val verifier: Recaptch
     * Show the result message.
     * @return The success result page
     */
-  def result = Action { implicit request =>
+  def result = Action { implicit request: Request[AnyContent]  =>
     // success message after POST-Redirect-GET
     // use flash scope to pass any once-off messages
     Ok(views.html.result())

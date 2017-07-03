@@ -21,8 +21,7 @@ import org.specs2.mock.Mockito
 import org.specs2.runner.JUnitRunner
 import org.specs2.specification.Scope
 import org.junit.runner.RunWith
-import play.api.i18n.MessagesApi
-import play.api.mvc.{AnyContent, Request}
+import play.api.mvc.{AnyContent, ControllerComponents, Request}
 import play.api.test.{FakeRequest, PlaySpecification, WithApplication}
 
 import scala.concurrent.{ExecutionContext, Future}
@@ -120,9 +119,10 @@ class ExampleFormSpec extends PlaySpecification with Mockito {
   def getController(app: Application, verifierAction: Int): ExampleForm = {
     val settings = new RecaptchaSettings(app.configuration)
     implicit val widgetHelper = new WidgetHelper(settings)
-    val messagesApi = app.injector.instanceOf[MessagesApi]
+    val formTemplate = app.injector.instanceOf[views.html.form] // use real form, with real recaptcha widget
     val verifier = mock[RecaptchaVerifier]
-    val controller = new ExampleForm(messagesApi, verifier)
+    val cc = app.injector.instanceOf[ControllerComponents] // use real CC
+    val controller = new ExampleForm(formTemplate, verifier, cc)
 
     verifierAction match {
       case VERIFIER_ACTION_NONE =>

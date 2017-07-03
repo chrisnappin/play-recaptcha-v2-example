@@ -22,9 +22,8 @@ import org.specs2.mock.Mockito
 import org.specs2.runner.JUnitRunner
 import org.specs2.specification.Scope
 import play.api.Application
-import play.api.i18n.MessagesApi
 import play.api.inject.guice.GuiceApplicationBuilder
-import play.api.mvc.{AnyContent, Request}
+import play.api.mvc.{AnyContent, ControllerComponents, Request}
 import play.api.test.{FakeRequest, PlaySpecification, WithApplication}
 
 import scala.concurrent.{ExecutionContext, Future}
@@ -119,9 +118,10 @@ class InvisibleFormSpec extends PlaySpecification with Mockito {
   def getController(app: Application, verifierAction: Int): InvisibleForm = {
     val settings = new RecaptchaSettings(app.configuration)
     implicit val widgetHelper = new WidgetHelper(settings)
-    val messagesApi = app.injector.instanceOf[MessagesApi]
+    val formTemplate = app.injector.instanceOf[views.html.invisibleForm]
     val verifier = mock[RecaptchaVerifier]
-    val controller = new InvisibleForm(messagesApi, verifier)
+    val cc = app.injector.instanceOf[ControllerComponents]
+    val controller = new InvisibleForm(formTemplate, verifier, cc)
 
     verifierAction match {
       case VERIFIER_ACTION_NONE =>

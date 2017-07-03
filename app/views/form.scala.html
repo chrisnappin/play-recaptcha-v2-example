@@ -1,6 +1,6 @@
-@import com.nappin.play.recaptcha.WidgetHelper
+@this(recaptchaField: recaptcha.recaptchaField)
 
-@(userForm: Form[UserRegistration])(implicit request: Request[AnyContent], messages: Messages, widgetHelper: WidgetHelper)
+@(userForm: Form[UserRegistration])(implicit messagesProvider: MessagesProvider)
 
 @main(Messages("exampleForm.title")) {
 
@@ -12,9 +12,9 @@
         @helper.inputText(userForm("username"), 'tabindex -> 1)
         @helper.inputText(userForm("email"), 'tabindex -> 2)
         @helper.checkbox(userForm("agree"), 'tabindex -> 3)
-        @recaptcha.recaptchaField(form = userForm, fieldName = "captcha", tabindex = 4, includeNoScript = true,
-            isRequired = true, 'class -> "extraClass")
-        
+        @recaptchaField(userForm, "captcha", tabindex = 4, includeNoScript = true, isRequired = true,
+            'class -> "extraClass")
+
         <button type="submit" tabindex="5">@Messages("exampleForm.submit")</button>
     }
 }

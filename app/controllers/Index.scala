@@ -18,14 +18,14 @@ package controllers
 import javax.inject.Inject
 
 import play.api.Logger
-import play.api.mvc.{Action, Controller}
-import play.api.i18n.{I18nSupport, MessagesApi}
+import play.api.i18n.I18nSupport
+import play.api.mvc.{AbstractController, AnyContent, ControllerComponents, Request}
 
 /**
   * Renders the index page.
-  * @param messagesApi    The Play messages
+  * @param cc   The controller components to use
   */
-class Index @Inject()(val messagesApi: MessagesApi) extends Controller with I18nSupport {
+class Index @Inject()(cc: ControllerComponents) extends AbstractController(cc) with I18nSupport {
 
   /** The logger to use. */
   private val logger: Logger = Logger(this.getClass)
@@ -34,7 +34,7 @@ class Index @Inject()(val messagesApi: MessagesApi) extends Controller with I18n
     * Show the index page.
     * @return The index page
     */
-  def index = Action { implicit request =>
+  def index = Action { implicit request: Request[AnyContent] =>
     logger.debug("accept languages are: " + request.acceptLanguages)
     Ok(views.html.index())
   }

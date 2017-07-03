@@ -21,9 +21,9 @@ import com.nappin.play.recaptcha.{RecaptchaVerifier, WidgetHelper}
 import play.api.Logger
 import play.api.data.Forms._
 import play.api.data.Form
-import play.api.i18n.{I18nSupport, MessagesApi}
+import play.api.i18n.{I18nSupport, Lang}
 import play.api.libs.json.Json
-import play.api.mvc.{Action, Controller}
+import play.api.mvc.{AbstractController, AnyContent, ControllerComponents, Request}
 
 import scala.concurrent.Future
 
@@ -32,12 +32,13 @@ case class JavascriptRegistration(username: String, email: Option[String], age: 
 
 /**
   * Example form using Javascript and recaptcha.
-  * @param messagesApi    The Play messages
+  * @param formTemplate   The form template to use
   * @param verifier       The recaptcha verifier to use
   * @param widgetHelper   The widget helper to use
+  * @param cc             The controller components
   */
-class JavascriptForm @Inject()(val messagesApi: MessagesApi, val verifier: RecaptchaVerifier)(
-  implicit widgetHelper: WidgetHelper) extends Controller with I18nSupport {
+class JavascriptForm @Inject()(formTemplate: views.html.javascriptForm, verifier: RecaptchaVerifier,
+  widgetHelper: WidgetHelper, cc: ControllerComponents) extends AbstractController(cc) with I18nSupport {
 
   /** The logger to use. */
   private val logger = Logger(this.getClass)
@@ -56,15 +57,15 @@ class JavascriptForm @Inject()(val messagesApi: MessagesApi, val verifier: Recap
     * Show the Javascript form.
     * @return The form
     */
-  def show = Action { implicit request =>
-    Ok(views.html.javascriptForm(userForm))
+  def show = Action { implicit request: Request[AnyContent] =>
+    Ok(formTemplate(userForm))
   }
 
   /**
     * Load the data to pre-populate the form.
     * @return The form data
     */
-  def load = Action.async { implicit request =>
+  def load = Action.async { implicit request: Request[AnyContent] =>
     Future {
       logger.debug("loading data for javascript form...")
 
@@ -81,7 +82,7 @@ class JavascriptForm @Inject()(val messagesApi: MessagesApi, val verifier: Recap
     * Process the form, validate the data and check the captcha.
     * @return The success messages, or the error messages
     */
-  def submitForm = Action.async { implicit request =>
+  def submitForm = Action.async { implicit request: Request[AnyContent] =>
     verifier.bindFromRequestAndVerify(userForm).map { form =>
       form.fold(
 
@@ -100,7 +101,8 @@ class JavascriptForm @Inject()(val messagesApi: MessagesApi, val verifier: Recap
           // TODO: process the validated form
 
           // return the result messages
-          Ok(Json.obj("title" -> messagesApi("result.title"), "feedback" -> messagesApi("result.feedback")))
+          val lang: Lang = request.messages.lang
+          Ok(Json.obj("title" -> messagesApi("result.title")(lang), "feedback" -> messagesApi("result.feedback")(lang)))
         }
       )
     }

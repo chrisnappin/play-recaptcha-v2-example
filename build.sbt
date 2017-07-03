@@ -1,15 +1,16 @@
 name := "recaptcha-v2-example"
 
-version := "2.2"
+version := "2.3"
 
 libraryDependencies ++= Seq(
-  "com.nappin" %% "play-recaptcha" % "2.2" notTransitive(),
+  "com.nappin" %% "play-recaptcha" % "2.3" notTransitive(),
+  guice,
   ws,
   specs2 % Test,
   "org.mockito" % "mockito-core" % "1.+" % Test 
 )
 
-scalaVersion := "2.11.7"
+scalaVersion := "2.12.1"
 
 lazy val root = (project in file(".")).enablePlugins(PlayScala)
 
