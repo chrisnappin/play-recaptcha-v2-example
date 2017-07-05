@@ -24,18 +24,22 @@ import play.api.data.Forms._
 import play.api.i18n.I18nSupport
 import play.api.mvc.{AbstractController, AnyContent, ControllerComponents, Request}
 
+import scala.concurrent.ExecutionContext
+
 // case class used to bind data from the form
 case class InvisibleUserRegistration(username: String, email: Option[String], agree: Boolean)
 
 /**
   * Example form with an invisible recaptcha button.
   *
-  * @param formTemplate  The form template to use
-  * @param verifier      The recaptcha verifier to use
-  * @param cc            The controller components
+  * @param formTemplate       The form template to use
+  * @param verifier           The recaptcha verifier to use
+  * @param cc                 The controller components
+  * @param executionContext   The execution context used to run futures
   */
 class InvisibleForm @Inject()(formTemplate: views.html.invisibleForm, verifier: RecaptchaVerifier,
-  cc: ControllerComponents) extends AbstractController(cc) with I18nSupport {
+  cc: ControllerComponents)(implicit executionContext: ExecutionContext) extends AbstractController(cc)
+      with I18nSupport {
 
   /** The logger to use. */
   private val logger = Logger(this.getClass)
@@ -62,8 +66,6 @@ class InvisibleForm @Inject()(formTemplate: views.html.invisibleForm, verifier: 
     * @return The success redirect, or the form with error messages
     */
   def submitForm = Action.async { implicit request: Request[AnyContent] =>
-    implicit val context = scala.concurrent.ExecutionContext.Implicits.global
-
     verifier.bindFromRequestAndVerify(userForm).map { form =>
       form.fold(
         // validation or captcha test failed

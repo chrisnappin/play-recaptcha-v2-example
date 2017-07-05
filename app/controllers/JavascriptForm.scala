@@ -25,20 +25,22 @@ import play.api.i18n.{I18nSupport, Lang}
 import play.api.libs.json.Json
 import play.api.mvc.{AbstractController, AnyContent, ControllerComponents, Request}
 
-import scala.concurrent.Future
+import scala.concurrent.{ExecutionContext, Future}
 
 // case class used to bind data from the form
 case class JavascriptRegistration(username: String, email: Option[String], age: Int, agree: Boolean)
 
 /**
   * Example form using Javascript and recaptcha.
-  * @param formTemplate   The form template to use
-  * @param verifier       The recaptcha verifier to use
-  * @param widgetHelper   The widget helper to use
-  * @param cc             The controller components
+  * @param formTemplate       The form template to use
+  * @param verifier           The recaptcha verifier to use
+  * @param widgetHelper       The widget helper to use
+  * @param cc                 The controller components
+  * @param executionContext   The execution context used to run futures
   */
 class JavascriptForm @Inject()(formTemplate: views.html.javascriptForm, verifier: RecaptchaVerifier,
-  widgetHelper: WidgetHelper, cc: ControllerComponents) extends AbstractController(cc) with I18nSupport {
+  widgetHelper: WidgetHelper, cc: ControllerComponents)(implicit executionContext: ExecutionContext)
+      extends AbstractController(cc) with I18nSupport {
 
   /** The logger to use. */
   private val logger = Logger(this.getClass)
@@ -50,8 +52,6 @@ class JavascriptForm @Inject()(formTemplate: views.html.javascriptForm, verifier
     "age" -> number,
     "agree" -> boolean
   )(JavascriptRegistration.apply)(JavascriptRegistration.unapply))
-
-  private implicit val context = scala.concurrent.ExecutionContext.Implicits.global
 
   /**
     * Show the Javascript form.
