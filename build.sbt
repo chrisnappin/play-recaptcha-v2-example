@@ -10,7 +10,7 @@ libraryDependencies ++= Seq(
   "org.mockito" % "mockito-core" % "1.+" % Test 
 )
 
-scalaVersion := "2.12.1"
+scalaVersion := "2.12.2"
 
 lazy val root = (project in file(".")).enablePlugins(PlayScala)
 
