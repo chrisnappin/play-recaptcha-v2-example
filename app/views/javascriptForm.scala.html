@@ -1,6 +1,6 @@
-@this(recaptchaField: recaptcha.recaptchaField)
+@this(recaptchaField: recaptcha.recaptchaField, widgetHelper: com.nappin.play.recaptcha.WidgetHelper)
 
-@(jsForm: Form[JavascriptRegistration])(implicit messagesProvider: MessagesProvider)
+@(jsForm: Form[JavascriptRegistration])(implicit messagesProvider: MessagesProvider, request: Request[AnyContent])
 
 @main(Messages("javascriptForm.title")) {
 
@@ -18,7 +18,7 @@
         <button id="jsformButton" type="submit" tabindex="6">@Messages("exampleForm.submit")</button>
     }
 
-    <script>
+    <script @Html(widgetHelper.outputNonce())>
     $(document).ready(function() {
       $("#jsform").submit(function(e){
         e.preventDefault();

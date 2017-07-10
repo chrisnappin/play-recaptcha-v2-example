@@ -16,14 +16,14 @@
 package controllers
 
 import com.nappin.play.recaptcha.RecaptchaSettings._
-import com.nappin.play.recaptcha.{RecaptchaSettings, RecaptchaVerifier, WidgetHelper}
+import com.nappin.play.recaptcha.{NonceActionBuilder, RecaptchaSettings, RecaptchaVerifier, WidgetHelper}
 import org.junit.runner.RunWith
 import org.specs2.mock.Mockito
 import org.specs2.runner.JUnitRunner
 import org.specs2.specification.Scope
 import play.api.Application
 import play.api.inject.guice.GuiceApplicationBuilder
-import play.api.mvc.{AnyContent, ControllerComponents, Request}
+import play.api.mvc.{AnyContent, ControllerComponents, MessagesActionBuilder, Request}
 import play.api.test.{FakeRequest, PlaySpecification, WithApplication}
 
 import scala.concurrent.{ExecutionContext, Future}
@@ -118,10 +118,12 @@ class InvisibleFormSpec extends PlaySpecification with Mockito {
   def getController(app: Application, verifierAction: Int): InvisibleForm = {
     val settings = new RecaptchaSettings(app.configuration)
     implicit val widgetHelper = new WidgetHelper(settings)
+    val messagesActionBuilder = app.injector.instanceOf[MessagesActionBuilder]
     val formTemplate = app.injector.instanceOf[views.html.invisibleForm]
+    val nonceAction = app.injector.instanceOf[NonceActionBuilder]
     val verifier = mock[RecaptchaVerifier]
     val cc = app.injector.instanceOf[ControllerComponents]
-    val controller = new InvisibleForm(formTemplate, verifier, cc)
+    val controller = new InvisibleForm(messagesActionBuilder, nonceAction, formTemplate, verifier, cc)
 
     verifierAction match {
       case VERIFIER_ACTION_NONE =>

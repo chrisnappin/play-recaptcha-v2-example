@@ -16,7 +16,7 @@
 package controllers
 
 import com.nappin.play.recaptcha.RecaptchaSettings._
-import com.nappin.play.recaptcha.{RecaptchaSettings, RecaptchaVerifier, WidgetHelper}
+import com.nappin.play.recaptcha.{NonceActionBuilder, RecaptchaSettings, RecaptchaVerifier, WidgetHelper}
 import org.specs2.mock.Mockito
 import org.specs2.runner.JUnitRunner
 import org.specs2.specification.Scope
@@ -120,9 +120,10 @@ class ExampleFormSpec extends PlaySpecification with Mockito {
     val settings = new RecaptchaSettings(app.configuration)
     implicit val widgetHelper = new WidgetHelper(settings)
     val formTemplate = app.injector.instanceOf[views.html.form] // use real form, with real recaptcha widget
+    val nonceAction = app.injector.instanceOf[NonceActionBuilder]
     val verifier = mock[RecaptchaVerifier]
     val cc = app.injector.instanceOf[ControllerComponents] // use real CC
-    val controller = new ExampleForm(formTemplate, verifier, cc)
+    val controller = new ExampleForm(formTemplate, nonceAction, verifier, cc)
 
     verifierAction match {
       case VERIFIER_ACTION_NONE =>

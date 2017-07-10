@@ -17,7 +17,7 @@ package controllers
 
 import javax.inject.Inject
 
-import com.nappin.play.recaptcha.{RecaptchaVerifier, WidgetHelper}
+import com.nappin.play.recaptcha.{NonceActionBuilder, RecaptchaVerifier, WidgetHelper}
 import play.api.Logger
 import play.api.data.Forms._
 import play.api.data.Form
@@ -33,14 +33,15 @@ case class JavascriptRegistration(username: String, email: Option[String], age: 
 /**
   * Example form using Javascript and recaptcha.
   * @param formTemplate       The form template to use
+  * @param nonceAction        Adds a nonce to the request, and CSP header to the response
   * @param verifier           The recaptcha verifier to use
   * @param widgetHelper       The widget helper to use
   * @param cc                 The controller components
   * @param executionContext   The execution context used to run futures
   */
-class JavascriptForm @Inject()(formTemplate: views.html.javascriptForm, verifier: RecaptchaVerifier,
-  widgetHelper: WidgetHelper, cc: ControllerComponents)(implicit executionContext: ExecutionContext)
-      extends AbstractController(cc) with I18nSupport {
+class JavascriptForm @Inject()(formTemplate: views.html.javascriptForm, nonceAction: NonceActionBuilder,
+  verifier: RecaptchaVerifier, widgetHelper: WidgetHelper, cc: ControllerComponents)(
+  implicit executionContext: ExecutionContext) extends AbstractController(cc) with I18nSupport {
 
   /** The logger to use. */
   private val logger = Logger(this.getClass)
@@ -57,7 +58,7 @@ class JavascriptForm @Inject()(formTemplate: views.html.javascriptForm, verifier
     * Show the Javascript form.
     * @return The form
     */
-  def show = Action { implicit request: Request[AnyContent] =>
+  def show = nonceAction { implicit request: Request[AnyContent] =>
     Ok(formTemplate(userForm))
   }
 

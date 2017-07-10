@@ -15,14 +15,13 @@
  */
 package controllers
 
-import com.nappin.play.recaptcha.RecaptchaVerifier
+import com.nappin.play.recaptcha.{NonceActionBuilder, RecaptchaVerifier}
 import javax.inject.Inject
 
 import play.api.Logger
 import play.api.data.Form
 import play.api.data.Forms._
-import play.api.i18n.I18nSupport
-import play.api.mvc.{AbstractController, AnyContent, ControllerComponents, Request}
+import play.api.mvc.{AbstractController, AnyContent, ControllerComponents, MessagesActionBuilder, MessagesRequest}
 
 import scala.concurrent.ExecutionContext
 
@@ -32,14 +31,16 @@ case class InvisibleUserRegistration(username: String, email: Option[String], ag
 /**
   * Example form with an invisible recaptcha button.
   *
+  * @param messagesAction     Wraps the request with i18n messages
+  * @param nonceAction        Adds a nonce to the request, and CSP header to the response
   * @param formTemplate       The form template to use
   * @param verifier           The recaptcha verifier to use
   * @param cc                 The controller components
   * @param executionContext   The execution context used to run futures
   */
-class InvisibleForm @Inject()(formTemplate: views.html.invisibleForm, verifier: RecaptchaVerifier,
-  cc: ControllerComponents)(implicit executionContext: ExecutionContext) extends AbstractController(cc)
-      with I18nSupport {
+class InvisibleForm @Inject()(messagesAction: MessagesActionBuilder, nonceAction: NonceActionBuilder,
+      formTemplate: views.html.invisibleForm, verifier: RecaptchaVerifier, cc: ControllerComponents)(
+      implicit executionContext: ExecutionContext) extends AbstractController(cc) {
 
   /** The logger to use. */
   private val logger = Logger(this.getClass)
@@ -56,16 +57,16 @@ class InvisibleForm @Inject()(formTemplate: views.html.invisibleForm, verifier: 
     *
     * @return The form
     */
-  def show = Action { implicit request: Request[AnyContent] =>
+  def show = nonceAction { messagesAction { implicit request: MessagesRequest[AnyContent] =>
     Ok(formTemplate(userForm))
-  }
+  } }
 
   /**
     * Handles a form submission.
     *
     * @return The success redirect, or the form with error messages
     */
-  def submitForm = Action.async { implicit request: Request[AnyContent] =>
+  def submitForm = nonceAction { messagesAction.async { implicit request: MessagesRequest[AnyContent] =>
     verifier.bindFromRequestAndVerify(userForm).map { form =>
       form.fold(
         // validation or captcha test failed
@@ -95,14 +96,14 @@ class InvisibleForm @Inject()(formTemplate: views.html.invisibleForm, verifier: 
         }
       )
     }
-  }
+  } }
 
   /**
     * Show the result message.
     *
     * @return The success result page
     */
-  def result = Action { implicit request: Request[AnyContent] =>
+  def result = messagesAction { implicit request: MessagesRequest[AnyContent] =>
     // success message after POST-Redirect-GET
     // use flash scope to pass any once-off messages
     Ok(views.html.result())

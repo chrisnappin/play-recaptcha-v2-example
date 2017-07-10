@@ -1,6 +1,6 @@
 @this(recaptchaField: recaptcha.recaptchaField)
 
-@(userForm: Form[UserRegistration])(implicit messagesProvider: MessagesProvider)
+@(userForm: Form[UserRegistration])(implicit messagesProvider: MessagesProvider, request: Request[AnyContent])
 
 @main(Messages("exampleForm.title")) {
 
@@ -12,7 +12,7 @@
         @helper.inputText(userForm("username"), 'tabindex -> 1)
         @helper.inputText(userForm("email"), 'tabindex -> 2)
         @helper.checkbox(userForm("agree"), 'tabindex -> 3)
-        @recaptchaField(userForm, "captcha", tabindex = 4, includeNoScript = true, isRequired = true,
+        @recaptchaField(userForm, "captcha", tabindex = 4, includeNoScript = false, isRequired = true,
             'class -> "extraClass")
 
         <button type="submit" tabindex="5">@Messages("exampleForm.submit")</button>

@@ -1,6 +1,6 @@
 @this(invisibleButton: recaptcha.invisibleButton)
 
-@(userForm: Form[InvisibleUserRegistration])(implicit messagesProvider: MessagesProvider)
+@(userForm: Form[InvisibleUserRegistration])(implicit messagesProvider: MessagesProvider, request: Request[AnyContent])
 
 @main(Messages("invisibleForm.title")) {
 

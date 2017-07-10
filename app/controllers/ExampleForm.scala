@@ -17,7 +17,7 @@ package controllers
 
 import javax.inject.Inject
 
-import com.nappin.play.recaptcha.RecaptchaVerifier
+import com.nappin.play.recaptcha.{NonceActionBuilder, RecaptchaVerifier}
 import play.api.Logger
 import play.api.data.Form
 import play.api.data.Forms._
@@ -33,12 +33,14 @@ case class UserRegistration(username: String, email: Option[String], agree: Bool
   * Example form with a recaptcha field.
   *
   * @param formTemplate       The form template to use
+  * @param nonceAction        Adds a nonce to the request, and CSP header to the response
   * @param verifier           The recaptcha verifier to use
   * @param cc                 The controller components to use
   * @param executionContext   The execution context used to run futures
   */
-class ExampleForm @Inject()(formTemplate: views.html.form, verifier: RecaptchaVerifier, cc: ControllerComponents)(
-    implicit executionContext: ExecutionContext) extends AbstractController(cc) with I18nSupport {
+class ExampleForm @Inject()(formTemplate: views.html.form, nonceAction: NonceActionBuilder,
+        verifier: RecaptchaVerifier, cc: ControllerComponents)(implicit executionContext: ExecutionContext)
+        extends AbstractController(cc) with I18nSupport {
 
   /** The logger to use. */
   private val logger = Logger(this.getClass)
@@ -55,7 +57,7 @@ class ExampleForm @Inject()(formTemplate: views.html.form, verifier: RecaptchaVe
     *
     * @return The form
     */
-  def show = Action { implicit request: Request[AnyContent] =>
+  def show = nonceAction { implicit request: Request[AnyContent] =>
     Ok(formTemplate(userForm))
   }
 
@@ -63,7 +65,7 @@ class ExampleForm @Inject()(formTemplate: views.html.form, verifier: RecaptchaVe
     * Handles a form submission.
     * @return The success redirect, or the form with error messages
     */
-  def submitForm = Action.async { implicit request: Request[AnyContent] =>
+  def submitForm =  nonceAction.async { implicit request: Request[AnyContent] =>
     verifier.bindFromRequestAndVerify(userForm).map { form =>
       form.fold(
         // validation or captcha test failed
