@@ -16,7 +16,7 @@
 package controllers
 
 import com.nappin.play.recaptcha.RecaptchaSettings._
-import com.nappin.play.recaptcha.{NonceActionBuilder, RecaptchaSettings, RecaptchaVerifier, WidgetHelper}
+import com.nappin.play.recaptcha.{NonceActionBuilder, RecaptchaVerifier}
 import org.junit.runner.RunWith
 import org.specs2.mock.Mockito
 import org.specs2.runner.JUnitRunner
@@ -116,8 +116,6 @@ class InvisibleFormSpec extends PlaySpecification with Mockito {
     * @return The controller
     */
   def getController(app: Application, verifierAction: Int): InvisibleForm = {
-    val settings = new RecaptchaSettings(app.configuration)
-    implicit val widgetHelper = new WidgetHelper(settings)
     val messagesActionBuilder = app.injector.instanceOf[MessagesActionBuilder]
     val formTemplate = app.injector.instanceOf[views.html.invisibleForm]
     val nonceAction = app.injector.instanceOf[NonceActionBuilder]
