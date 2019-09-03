@@ -1,3 +1,4 @@
+@import helper._
 @this(invisibleButton: recaptcha.invisibleButton)
 
 @(userForm: Form[InvisibleUserRegistration])(implicit messagesProvider: MessagesProvider, request: Request[AnyContent])
@@ -7,14 +8,15 @@
     <h1>@Messages("invisibleForm.title")</h1>
     <p>@Messages("invisibleForm.description")</p>
 
-    @helper.form(action = routes.InvisibleForm.submitForm(), 'id -> "my_form") {
+    @helper.form(action = routes.InvisibleForm.submitForm(), Symbol("id") -> "my_form") {
         
-        @helper.inputText(userForm("username"), 'tabindex -> 1)
-        @helper.inputText(userForm("email"), 'tabindex -> 2)
-        @helper.checkbox(userForm("agree"), 'tabindex -> 3)
+        @helper.inputText(userForm("username"), Symbol("tabindex") -> 1)
+        @helper.inputText(userForm("email"), Symbol("tabindex") -> 2)
+        @helper.checkbox(userForm("agree"), Symbol("tabindex") -> 3)
+        @CSRF.formField
 
         <p>&nbsp;</p>
 
-        @invisibleButton("my_form", Messages("invisibleForm.submit"), 'tabindex -> "4")
+        @invisibleButton("my_form", Messages("invisibleForm.submit"), Symbol("tabindex") -> "4")
     }
 }
