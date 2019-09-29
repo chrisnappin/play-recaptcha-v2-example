@@ -1,3 +1,4 @@
+@import helper._
 @this(recaptchaField: recaptcha.recaptchaField, widgetHelper: com.nappin.play.recaptcha.WidgetHelper)
 
 @(jsForm: Form[JavascriptRegistration])(implicit messagesProvider: MessagesProvider, request: Request[AnyContent])
@@ -7,13 +8,14 @@
     <h1 id="title">@Messages("javascriptForm.title")</h1>
     <p id="feedback">@Messages("exampleForm.description")</p>
 
-    @helper.form(action = routes.JavascriptForm.submitForm(), 'id -> "jsform") {
-        @helper.inputText(jsForm("username"), 'id -> "username", 'tabindex -> 1)
-        @helper.inputText(jsForm("email"), 'id -> "email", 'tabindex -> 2)
-        @helper.inputText(jsForm("age"), 'id -> "age", 'tabindex -> 3)
-        @helper.checkbox(jsForm("agree"), 'id -> "agree", 'tabindex -> 4)
+    @helper.form(action = routes.JavascriptForm.submitForm(), Symbol("id") -> "jsform") {
+        @helper.inputText(jsForm("username"), Symbol("id") -> "username", Symbol("tabindex") -> 1)
+        @helper.inputText(jsForm("email"), Symbol("id") -> "email", Symbol("tabindex") -> 2)
+        @helper.inputText(jsForm("age"), Symbol("id") -> "age", Symbol("tabindex") -> 3)
+        @helper.checkbox(jsForm("agree"), Symbol("id") -> "agree", Symbol("tabindex") -> 4)
         @recaptchaField(jsForm, "captcha", tabindex = 5, includeNoScript = true, isRequired = true,
-            'class -> "extraClass")
+            Symbol("class") -> "extraClass")
+        @CSRF.formField
 
         <button id="jsformButton" type="submit" tabindex="6">@Messages("exampleForm.submit")</button>
     }
@@ -50,10 +52,13 @@
           "g-recaptcha-response": $("#g-recaptcha-response").val()
         }
 
+        var tokenValue = $("[name='csrfToken']").val();
+
         $.ajax({
           type: 'POST',
           url: '@routes.JavascriptForm.submitForm()',
           contentType: 'application/json',
+          headers: { "Csrf-Token": tokenValue },
           data: JSON.stringify(formData),
           dataType: 'json',
           timeout: 5000,

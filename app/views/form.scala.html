@@ -1,3 +1,4 @@
+@import helper._
 @this(recaptchaField: recaptcha.recaptchaField)
 
 @(userForm: Form[UserRegistration])(implicit messagesProvider: MessagesProvider, request: Request[AnyContent])
@@ -9,11 +10,12 @@
     
     @helper.form(action = routes.ExampleForm.submitForm()) {
         
-        @helper.inputText(userForm("username"), 'tabindex -> 1)
-        @helper.inputText(userForm("email"), 'tabindex -> 2)
-        @helper.checkbox(userForm("agree"), 'tabindex -> 3)
+        @helper.inputText(userForm("username"), Symbol("tabindex") -> 1)
+        @helper.inputText(userForm("email"), Symbol("tabindex") -> 2)
+        @helper.checkbox(userForm("agree"), Symbol("tabindex") -> 3)
         @recaptchaField(userForm, "captcha", tabindex = 4, includeNoScript = false, isRequired = true,
-            'class -> "extraClass")
+            Symbol("class") -> "extraClass")
+        @CSRF.formField
 
         <button type="submit" tabindex="5">@Messages("exampleForm.submit")</button>
     }
