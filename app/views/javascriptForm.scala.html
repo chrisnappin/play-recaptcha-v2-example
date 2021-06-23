@@ -8,7 +8,7 @@
     <h1 id="title">@Messages("javascriptForm.title")</h1>
     <p id="feedback">@Messages("exampleForm.description")</p>
 
-    @helper.form(action = routes.JavascriptForm.submitForm(), Symbol("id") -> "jsform") {
+    @helper.form(action = routes.JavascriptForm.submitForm, Symbol("id") -> "jsform") {
         @helper.inputText(jsForm("username"), Symbol("id") -> "username", Symbol("tabindex") -> 1)
         @helper.inputText(jsForm("email"), Symbol("id") -> "email", Symbol("tabindex") -> 2)
         @helper.inputText(jsForm("age"), Symbol("id") -> "age", Symbol("tabindex") -> 3)
@@ -28,7 +28,7 @@
 
       $.ajax({
         type: 'GET',
-        url: '@routes.JavascriptForm.load()',
+        url: '@routes.JavascriptForm.load',
         dataType: 'json',
         timeout: 5000,
         success: function(response, status, xhr) {
@@ -56,7 +56,7 @@
 
         $.ajax({
           type: 'POST',
-          url: '@routes.JavascriptForm.submitForm()',
+          url: '@routes.JavascriptForm.submitForm',
           contentType: 'application/json',
           headers: { "Csrf-Token": tokenValue },
           data: JSON.stringify(formData),

@@ -1,5 +1,6 @@
 /bin
 /logs
+/.bsp
 /.settings
 /target
 /.cache

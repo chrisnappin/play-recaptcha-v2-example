@@ -24,7 +24,9 @@ import org.specs2.specification.Scope
 import play.api.Application
 import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.mvc.{AnyContent, ControllerComponents, MessagesActionBuilder, Request}
+import play.api.data.FormBinding
 import play.api.test.{FakeRequest, PlaySpecification, WithApplication}
+import play.api.test.CSRFTokenHelper._
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -48,7 +50,7 @@ class InvisibleFormSpec extends PlaySpecification with Mockito {
 
     "return the example form" in new WithWidgetHelper(configuration) {
       val controller = getController(app, VERIFIER_ACTION_NONE)
-      val request = FakeRequest(GET, "/invisibleForm")
+      val request = FakeRequest(GET, "/invisibleForm").withCSRFToken
       val page = controller.show().apply(request)
 
       status(page) must equalTo(OK)
@@ -58,14 +60,18 @@ class InvisibleFormSpec extends PlaySpecification with Mockito {
 
     "reject an empty form submission" in new WithWidgetHelper(configuration) {
       val controller = getController(app, VERIFIER_ACTION_EMPTY_FORM)
-      val request = FakeRequest(POST, "/invisibleForm").withFormUrlEncodedBody()
+      val request = FakeRequest(POST, "/invisibleForm")
+        .withFormUrlEncodedBody()
+        .withCSRFToken
 
       await(controller.submitForm().apply(request)) must throwAn[IllegalStateException]
     }
 
     "reject missing mandatory fields" in new WithWidgetHelper(configuration) {
       val controller = getController(app, VERIFIER_ACTION_USERNAME_MISSING)
-      val request = FakeRequest(POST, "/invisibleForm").withFormUrlEncodedBody("recaptcha_response_field" -> "r")
+      val request = FakeRequest(POST, "/invisibleForm")
+        .withFormUrlEncodedBody("recaptcha_response_field" -> "r")
+        .withCSRFToken
       val page = controller.submitForm().apply(request)
 
       status(page) must equalTo(BAD_REQUEST)
@@ -75,7 +81,9 @@ class InvisibleFormSpec extends PlaySpecification with Mockito {
 
     "reject recaptcha failure" in new WithWidgetHelper(configuration) {
       val controller = getController(app, VERIFIER_ACTION_RECAPTCHA_FAILURE)
-      val request = FakeRequest(POST, "/invisibleForm").withFormUrlEncodedBody("recaptcha_response_field" -> "r")
+      val request = FakeRequest(POST, "/invisibleForm")
+        .withFormUrlEncodedBody("recaptcha_response_field" -> "r")
+        .withCSRFToken
       val page = controller.submitForm().apply(request)
 
       status(page) must equalTo(BAD_REQUEST)
@@ -84,9 +92,11 @@ class InvisibleFormSpec extends PlaySpecification with Mockito {
 
     "handle recaptcha success" in new WithWidgetHelper(configuration) {
       val controller = getController(app, VERIFIER_ACTION_RECAPTCHA_SUCCESS)
-      val request = FakeRequest(POST, "/invisibleForm").withFormUrlEncodedBody(
-        "recaptcha_response_field" -> "r",
-        "username" -> "a")
+      val request = FakeRequest(POST, "/invisibleForm")
+        .withFormUrlEncodedBody(
+          "recaptcha_response_field" -> "r",
+          "username" -> "a")
+        .withCSRFToken
 
       val page = controller.submitForm().apply(request)
       status(page) must equalTo(SEE_OTHER)
@@ -94,7 +104,7 @@ class InvisibleFormSpec extends PlaySpecification with Mockito {
 
     "return the results page" in new WithWidgetHelper(configuration) {
       val controller = getController(app, VERIFIER_ACTION_NONE)
-      val request = FakeRequest(GET, "/invisibleResult")
+      val request = FakeRequest(GET, "/invisibleResult").withCSRFToken
       val page = controller.result().apply(request)
 
       status(page) must equalTo(OK)
@@ -155,10 +165,12 @@ class InvisibleFormSpec extends PlaySpecification with Mockito {
           "recaptcha_response_field" -> "r",
           "username" -> "a")
 
+        val formBinding = FormBinding.Implicits.formBinding
+
         verifier.bindFromRequestAndVerify(any[play.api.data.Form[InvisibleUserRegistration]])(
           any[Request[AnyContent]], any[ExecutionContext]) returns
           Future {
-            controller.userForm.bindFromRequest()(request)
+            controller.userForm.bindFromRequest()(request, formBinding)
           }
     }
     controller

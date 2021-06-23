@@ -85,7 +85,7 @@ class ExampleForm @Inject()(formTemplate: views.html.form, nonceAction: NonceAct
           val saveMessage = "User " + success.username + " has been registered"
 
           // use POST-Redirect-GET to avoid repeated form submissions on browser refresh
-          Redirect(routes.ExampleForm.result()).flashing("save.message" -> saveMessage)
+          Redirect(routes.ExampleForm.result).flashing("save.message" -> saveMessage)
 
           /*
            * This process uses GET redirect to a page with a message passed via flash scope.
