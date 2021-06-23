@@ -8,7 +8,7 @@
     <h1>@Messages("exampleForm.title")</h1>
     <p>@Messages("exampleForm.description")</p>
     
-    @helper.form(action = routes.ExampleForm.submitForm()) {
+    @helper.form(action = routes.ExampleForm.submitForm) {
         
         @helper.inputText(userForm("username"), Symbol("tabindex") -> 1)
         @helper.inputText(userForm("email"), Symbol("tabindex") -> 2)

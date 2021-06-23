@@ -25,7 +25,9 @@ import play.api.Application
 import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.libs.json.Json
 import play.api.mvc.{AnyContent, ControllerComponents, Request}
+import play.api.data.FormBinding
 import play.api.test.{FakeRequest, PlaySpecification, WithApplication}
+import play.api.test.CSRFTokenHelper._
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -49,7 +51,7 @@ class JavascriptFormSpec extends PlaySpecification with Mockito {
 
     "return the example form" in new WithWidgetHelper(configuration) {
       val controller = getController(app, VERIFIER_ACTION_NONE)
-      val request = FakeRequest(GET, "/js-form")
+      val request = FakeRequest(GET, "/js-form").withCSRFToken
       val page = controller.show().apply(request)
 
       status(page) must equalTo(OK)
@@ -59,7 +61,7 @@ class JavascriptFormSpec extends PlaySpecification with Mockito {
 
     "load the data to pre-populate the form" in new WithWidgetHelper(configuration) {
       val controller = getController(app, VERIFIER_ACTION_NONE)
-      val request = FakeRequest(GET, "/js-form/load")
+      val request = FakeRequest(GET, "/js-form/load").withCSRFToken
       val response = controller.load().apply(request)
 
       status(response) must equalTo(OK)
@@ -73,15 +75,19 @@ class JavascriptFormSpec extends PlaySpecification with Mockito {
 
     "reject an empty form submission" in new WithWidgetHelper(configuration) {
       val controller = getController(app, VERIFIER_ACTION_EMPTY_FORM)
-      val request = FakeRequest(POST, "/js-form").withJsonBody(Json.obj())
+      val request = FakeRequest(POST, "/js-form")
+        .withJsonBody(Json.obj())
+        .withCSRFToken
 
       await(controller.submitForm().apply(request)) must throwAn[IllegalStateException]
     }
 
     "reject missing mandatory fields" in new WithWidgetHelper(configuration) {
       val controller = getController(app, VERIFIER_ACTION_USERNAME_MISSING)
-      val request = FakeRequest(POST, "/js-form").withJsonBody(Json.obj(
-        "recaptcha_response_field" -> "r"))
+      val request = FakeRequest(POST, "/js-form")
+        .withJsonBody(Json.obj(
+          "recaptcha_response_field" -> "r"))
+        .withCSRFToken
       val response = controller.submitForm().apply(request)
 
       status(response) must equalTo(UNPROCESSABLE_ENTITY)
@@ -92,8 +98,10 @@ class JavascriptFormSpec extends PlaySpecification with Mockito {
 
     "reject recaptcha failure" in new WithWidgetHelper(configuration) {
       val controller = getController(app, VERIFIER_ACTION_RECAPTCHA_FAILURE)
-      val request = FakeRequest(POST, "/js-form").withJsonBody(Json.obj(
-        "recaptcha_response_field" -> "r"))
+      val request = FakeRequest(POST, "/js-form")
+        .withJsonBody(Json.obj(
+          "recaptcha_response_field" -> "r"))
+        .withCSRFToken
       val response = controller.submitForm().apply(request)
 
       status(response) must equalTo(UNPROCESSABLE_ENTITY)
@@ -104,13 +112,15 @@ class JavascriptFormSpec extends PlaySpecification with Mockito {
 
     "handle recaptcha success" in new WithWidgetHelper(configuration) {
       val controller = getController(app, VERIFIER_ACTION_RECAPTCHA_SUCCESS)
-      val request = FakeRequest(POST, "/js-form").withJsonBody(Json.obj(
-        "recaptcha_response_field" -> "r",
-        "username" -> "a",
-        "age" -> "42"))
+      val request = FakeRequest(POST, "/js-form")
+        .withJsonBody(Json.obj(
+          "recaptcha_response_field" -> "r",
+          "username" -> "a",
+          "age" -> "42"))
+        .withCSRFToken
       val response = controller.submitForm().apply(request)
 
-      //status(response) must equalTo(OK)
+      status(response) must equalTo(OK)
       contentType(response) must beSome("application/json")
       contentAsJson(response) must equalTo(Json.parse(
         "{\"title\":\"User Registered\"," +
@@ -172,10 +182,12 @@ class JavascriptFormSpec extends PlaySpecification with Mockito {
           "username" -> "a",
           "age" -> "42"))
 
+        val formBinding = FormBinding.Implicits.formBinding
+
         verifier.bindFromRequestAndVerify(any[play.api.data.Form[JavascriptRegistration]])(
           any[Request[AnyContent]], any[ExecutionContext]) returns
           Future {
-            controller.userForm.bindFromRequest()(request)
+            controller.userForm.bindFromRequest()(request, formBinding)
           }
     }
     controller
